@@ -1,0 +1,48 @@
+CREATE TABLE gaji_pegawai (
+    nip CHAR(3) PRIMARY KEY,
+    nama VARCHAR(20),
+    gaji_pokok INT,
+    sts_marital ENUM('K','B'),
+    jam_lembur INT,
+    gaji_bersih INT
+);
+
+-----------
+
+DELIMITER //
+
+CREATE PROCEDURE sp_gaji_pegawai (
+    IN p_nip CHAR(3),
+    IN p_nama VARCHAR(20),
+    IN p_gaji_pokok INT,
+    IN p_sts_marital ENUM('K','B'),
+    IN p_jam_lembur INT
+)
+BEGIN
+    DECLARE v_gaji_lembur INT;
+    DECLARE v_tunj_lembur DOUBLE;
+    DECLARE v_gaji_bersih DOUBLE;
+
+    
+    SET v_gaji_lembur = p_jam_lembur * 25000;
+
+    
+    IF p_sts_marital = 'K' THEN
+        SET v_tunj_lembur = 0.05 * p_gaji_pokok;
+    ELSE
+        SET v_tunj_lembur = 0.025 * p_gaji_pokok;
+    END IF;
+
+    
+    SET v_gaji_bersih = p_gaji_pokok + v_gaji_lembur + v_tunj_lembur;
+
+    
+    INSERT INTO gaji_pegawai
+    VALUES (p_nip, p_nama, p_gaji_pokok, p_sts_marital, p_jam_lembur, v_gaji_bersih);
+
+END //
+
+DELIMITER ;
+
+------------------
+CALL sp_gaji_pegawai('001', 'Andi', 5000000, 'K', 10);
