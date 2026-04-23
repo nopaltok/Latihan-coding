@@ -62,3 +62,8 @@ DELETE FROM siswa WHERE NoSiswa = '22';
 -- LIHAT HASIL AKHIR
 SELECT * FROM siswa;
 SELECT * FROM log_siswa;
+
+Create table barang (Kode_brg char(3) primary key, nama_brg char(15), satuan char(10), jml_stok
+    -> int(5));
+Create table jual (kode_jual char(2) primary key, nm_konsumen char(15), almt_kons char(20),
+    -> kota_kons char(15), tgl_jual date,  kode_brg char(3), jml_jual int(4));
