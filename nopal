@@ -1,0 +1,64 @@
+-- 1. PERSIPAN DATABASE DAN TABEL
+-- Ganti [nim] dengan 5 digit terakhir NIM Anda
+CREATE DATABASE log_[nim];
+USE log_[nim];
+
+-- Membuat tabel utama
+CREATE TABLE siswa (
+    NoSiswa char(4),
+    nama varchar(20),
+    PRIMARY KEY (NoSiswa)
+);
+
+-- Membuat tabel log
+CREATE TABLE log_siswa (
+    kegiatan varchar(15),
+    waktu datetime
+);
+
+-- 2. MEMBUAT TRIGGER (Ganti [nim] pada nama trigger)
+
+-- Trigger untuk Insert
+DELIMITER //
+CREATE TRIGGER t_insert_[nim]
+AFTER INSERT ON siswa
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_siswa (kegiatan, waktu)
+    VALUES ('Add Data', NOW());
+END//
+
+-- Trigger untuk Update
+CREATE TRIGGER t_update_[nim]
+AFTER UPDATE ON siswa
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_siswa (kegiatan, waktu)
+    VALUES ('Update Data', NOW());
+END//
+
+-- Trigger untuk Delete
+CREATE TRIGGER t_delete_[nim]
+AFTER DELETE ON siswa
+FOR EACH ROW
+BEGIN
+    INSERT INTO log_siswa (kegiatan, waktu)
+    VALUES ('Delete Data', NOW());
+END//
+DELIMITER ;
+
+-- 3. PENGUJIAN (POIN 3, 4, 5)
+
+-- Tambah Data
+INSERT INTO siswa (NoSiswa, nama) VALUES ('11', 'Joni');
+INSERT INTO siswa (NoSiswa, nama) VALUES ('22', 'Smith');
+
+-- Update Data
+UPDATE siswa SET nama = 'Joni Updated' WHERE NoSiswa = '11';
+
+-- Hapus Data
+DELETE FROM siswa WHERE NoSiswa = '22';
+
+-- LIHAT HASIL AKHIR
+SELECT * FROM siswa;
+SELECT * FROM log_siswa;
